@@ -1,0 +1,20 @@
+:root {
+  --bg-primary: #0b0f1a;
+  --bg-secondary: #12172a;
+  --text-primary: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --accent: #7c7cff;       /* cosmic violet */
+  --accent-glow: #9f9fff;
+}
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top, #1a1f3c, transparent 40%);
+  z-index: -1;
+}

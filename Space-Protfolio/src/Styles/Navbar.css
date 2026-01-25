@@ -1,0 +1,30 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  background: rgba(11, 15, 26, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 1rem 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1f2340;
+}
+
+.logo {
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.nav-links a {
+  margin-left: 2rem;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+  color: var(--accent);
+}
+.nav-links a.active {
+  font-weight: bold;
+}
