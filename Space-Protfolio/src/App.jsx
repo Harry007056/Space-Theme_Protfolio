@@ -1,7 +1,24 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './index.css';
 
 export default function SpacePortfolio() {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch projects from backend
+    fetch('http://localhost:5000/api/projects')
+      .then(response => response.json())
+      .then(data => {
+        setProjects(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching projects:', error);
+        setLoading(false);
+      });
+  }, []);
+
   useEffect(() => {
     // Intersection Observer for scroll animations
     const observerOptions = {
@@ -24,10 +41,35 @@ export default function SpacePortfolio() {
     return () => observer.disconnect();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Transmission received! 🚀 I\'ll respond soon.');
-    e.target.reset();
+
+    const formData = new FormData(e.target);
+    const data = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      message: formData.get('message')
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        alert('Transmission received! 🚀 I\'ll respond soon.');
+        e.target.reset();
+      } else {
+        alert('Error sending message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error sending message. Please try again.');
+    }
   };
 
   return (
@@ -153,56 +195,55 @@ export default function SpacePortfolio() {
           Stellar Projects
         </h2>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {[
-            {
-              icon: '🌌',
-              title: 'Nebula Dashboard',
-              description: 'An immersive analytics platform with real-time data visualization and AI-powered insights. Features 3D charts and cosmic-themed UI.',
-              tags: ['React', 'Three.js', 'D3.js', 'WebGL']
-            },
-            {
-              icon: '🛸',
-              title: 'Quantum Commerce',
-              description: 'Next-generation e-commerce platform with AR product previews, blockchain payments, and a revolutionary shopping experience.',
-              tags: ['Next.js', 'AR.js', 'Stripe', 'Web3']
-            },
-            {
-              icon: '🌠',
-              title: 'Cosmic Chat AI',
-              description: 'Intelligent chatbot with natural language processing and personality customization. Built with cutting-edge AI models.',
-              tags: ['Python', 'TensorFlow', 'FastAPI', 'GPT-4']
-            }
-          ].map((project, index) => (
-            <div
-              key={index}
-              className="observe-element opacity-0 bg-[rgba(10,22,40,0.6)] border border-purple-500/30 rounded-3xl overflow-hidden backdrop-blur-lg transition-all duration-400 hover:translate-y-[-15px] hover:scale-105 hover:shadow-[0_20px_60px_rgba(139,92,246,0.4)] hover:border-cyan-400 relative group"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-cyan-400/20 opacity-0 transition-opacity duration-400 group-hover:opacity-100 pointer-events-none" />
-              <div className="w-full h-64 bg-gradient-to-br from-purple-500/30 to-cyan-400/30 flex items-center justify-center text-8xl border-b border-purple-500/30">
-                {project.icon}
-              </div>
-              <div className="p-10">
-                <h3 className="font-orbitron text-3xl mb-4 text-white">{project.title}</h3>
-                <p className="font-space-mono leading-relaxed opacity-90 mb-6">{project.description}</p>
-                <div className="flex flex-wrap gap-3 mb-6">
-                  {project.tags.map((tag, i) => (
-                    <span
-                      key={i}
-                      className="px-4 py-2 bg-purple-500/20 border border-purple-500 rounded-full text-sm font-bold text-cyan-400"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 text-cyan-400 font-bold transition-all duration-300 hover:gap-4 hover:text-white"
-                >
-                  Explore Project →
-                </a>
-              </div>
+          {loading ? (
+            <div className="col-span-full text-center">
+              <div className="text-cyan-400 text-xl">Loading cosmic projects...</div>
             </div>
-          ))}
+          ) : (
+            projects.map((project, index) => (
+              <div
+                key={project.id}
+                className="observe-element opacity-0 bg-[rgba(10,22,40,0.6)] border border-purple-500/30 rounded-3xl overflow-hidden backdrop-blur-lg transition-all duration-400 hover:translate-y-[-15px] hover:scale-105 hover:shadow-[0_20px_60px_rgba(139,92,246,0.4)] hover:border-cyan-400 relative group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-cyan-400/20 opacity-0 transition-opacity duration-400 group-hover:opacity-100 pointer-events-none" />
+                <div className="w-full h-64 bg-gradient-to-br from-purple-500/30 to-cyan-400/30 flex items-center justify-center text-8xl border-b border-purple-500/30">
+                  {project.icon}
+                </div>
+                <div className="p-10">
+                  <h3 className="font-orbitron text-3xl mb-4 text-white">{project.title}</h3>
+                  <p className="font-space-mono leading-relaxed opacity-90 mb-6">{project.description}</p>
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {project.tags.map((tag, i) => (
+                      <span
+                        key={i}
+                        className="px-4 py-2 bg-purple-500/20 border border-purple-500 rounded-full text-sm font-bold text-cyan-400"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-4">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-cyan-400 font-bold transition-all duration-300 hover:gap-4 hover:text-white"
+                    >
+                      GitHub →
+                    </a>
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-purple-400 font-bold transition-all duration-300 hover:gap-4 hover:text-white"
+                    >
+                      Demo →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </section>
 
@@ -219,17 +260,20 @@ export default function SpacePortfolio() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <input
               type="text"
+              name="name"
               placeholder="Your Name"
               required
               className="w-full px-6 py-6 bg-[rgba(10,22,40,0.6)] border-2 border-purple-500/30 rounded-lg text-white font-space-mono text-base backdrop-blur-lg transition-all duration-300 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.3)] placeholder:text-white/50"
             />
             <input
               type="email"
+              name="email"
               placeholder="Your Email"
               required
               className="w-full px-6 py-6 bg-[rgba(10,22,40,0.6)] border-2 border-purple-500/30 rounded-lg text-white font-space-mono text-base backdrop-blur-lg transition-all duration-300 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.3)] placeholder:text-white/50"
             />
             <textarea
+              name="message"
               placeholder="Your Message"
               required
               className="w-full px-6 py-6 bg-[rgba(10,22,40,0.6)] border-2 border-purple-500/30 rounded-lg text-white font-space-mono text-base backdrop-blur-lg transition-all duration-300 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.3)] placeholder:text-white/50 resize-y min-h-[150px]"
