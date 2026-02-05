@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* App-specific helpers and preserved styles */
+
+:root {
+  --cosmic-blue: #0a1628;
+  --nebula-purple: #8b5cf6;
+  --plasma-cyan: #06b6d4;
+  --solar-orange: #f97316;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--cosmic-blue);
+  color: #e6eef8;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+* { box-sizing: border-box; }
+
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif;
+}
+
+.font-space-mono {
+  font-family: 'Space Mono', monospace;
+}
+
+/* Starfield Animation */
+        .starfield {
+          background: 
+            radial-gradient(2px 2px at 20% 30%, white, transparent),
+            radial-gradient(2px 2px at 60% 70%, white, transparent),
+            radial-gradient(1px 1px at 50% 50%, white, transparent),
+            radial-gradient(1px 1px at 80% 10%, white, transparent),
+            radial-gradient(2px 2px at 90% 60%, white, transparent),
+            radial-gradient(1px 1px at 33% 75%, white, transparent),
+            radial-gradient(2px 2px at 79% 53%, white, transparent);
+          background-size: 200% 200%;
+          animation: starTwinkle 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes starTwinkle {
+          0% { opacity: 0.7; }
+          100% { opacity: 1; }
+        }
+
+        /* Nebula Animation */
+        .nebula {
+          animation: nebulaFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes nebulaFloat {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); }
+          33% { transform: translate(5%, 5%) rotate(5deg); }
+          66% { transform: translate(-5%, 3%) rotate(-3deg); }
+        }
+
+        /* Glow Pulse */
+        .glow-pulse {
+          animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+          0%, 100% { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5)); }
+          50% { filter: drop-shadow(0 0 40px rgba(6, 182, 212, 0.8)); }
+        }
+
+        /* Fade In Up */
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fadeInUp {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Float Animation */
+        .float {
+          animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translate(0, 0); }
+          25% { transform: translate(20px, -30px); }
+          50% { transform: translate(-20px, -50px); }
+          75% { transform: translate(30px, -20px); }
+        }
+
+        .float-delay-2 {
+          animation-delay: 2s;
+        }
+
+        .float-delay-4 {
+          animation-delay: 4s;
+        }
+
+        .float-delay-6 {
+          animation-delay: 6s;
+        }
+
+        /* Scroll Indicator */
+        @keyframes scrollBounce {
+          0%, 100% { transform: translateX(-50%) translateY(0); }
+          50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        .scroll-indicator {
+          animation: scrollBounce 2s ease-in-out infinite;
+        }
+
+        /* Scroll dot keyframes (used by small dot inside indicator) */
+        @keyframes scrollDot {
+          0%, 100% { opacity: 0; }
+          50% { opacity: 1; }
+        }
+
+        /* Button Shine Effect */
+        .btn-shine::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+          transition: left 0.5s ease;
+        }
+
+        .btn-shine:hover::before {
+          left: 100%;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+          background: linear-gradient(135deg, #ffffff, #06b6d4, #8b5cf6);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .gradient-text-alt {
+          background: linear-gradient(135deg, #ffffff, #06b6d4);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
